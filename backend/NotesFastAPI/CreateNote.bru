@@ -1,0 +1,22 @@
+meta {
+  name: CreateNote
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://127.0.0.1:8000/notes
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYWx2aXVtMUBleGFtcGxlLmNvbSIsImV4cCI6MTc0NTY2Nzc1OH0.qTyA-wzfg8q0aCyikEqF2sUMVtm4a0ZlmLeb_XmF22c
+}
+
+body:json {
+  {
+    "title": "Note",
+    "content": "This is my note."
+  }
+}
