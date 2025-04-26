@@ -1,0 +1,22 @@
+meta {
+  name: Update
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://127.0.0.1:8000/notes/680cb93cc02197761a5d8d19
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrYWx2aXVtMUBleGFtcGxlLmNvbSIsImV4cCI6MTc0NTY2Nzc1OH0.qTyA-wzfg8q0aCyikEqF2sUMVtm4a0ZlmLeb_XmF22c
+}
+
+body:json {
+  {
+    "title": "Updated",
+    "content": "This is my note."
+  }
+}
