@@ -40,60 +40,27 @@ except Exception as e:
     print(f"❌ MongoDB connection failed: {e}")
 
 # Note Routes
-# @app.get("/notes")
-# def get_notes():
-#     notes = list(notes_collection.find())
-#     for note in notes:
-#         note["_id"] = str(note["_id"])  # convert ObjectId to string
-#     return notes
-
-# @app.post("/notes")
-# def add_note(note: Notes):
-#     result = notes_collection.insert_one(note.dict())
-#     return {"id": str(result.inserted_id)}
-
-# @app.delete("/notes/{note_id}")
-# def delete_note(note_id: str):
-#     result = notes_collection.delete_one({"_id": ObjectId(note_id)})
-#     if result.deleted_count == 0:
-#         raise HTTPException(status_code=404, detail="Note not found")
-#     return {"message": "Note deleted"}
-
-# @app.put("/notes/{note_id}")
-# def update_note(note_id: str, updated_note: Notes):
-#     result = notes_collection.update_one(
-#         {"_id": ObjectId(note_id)},
-#         {"$set": {"title": updated_note.title, "content": updated_note.content}}
-#     )
-#     if result.modified_count == 1:
-#         return {"message": "Note updated successfully"}
-#     else:
-#         return {"message": "Note not found or no changes made"}
-
-def get_current_user(request: Request):
-    token = request.headers.get("Authorization")
-    if not token or not token.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Unauthorized")
-    try:
-        payload = decode_token(token[7:])  # remove "Bearer "
-        return payload["sub"]  # email
-    except:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
 @app.get("/notes")
-def get_notes(current_user: str = Depends(get_current_user)):
+def get_notes():
     notes = list(notes_collection.find())
     for note in notes:
         note["_id"] = str(note["_id"])  # convert ObjectId to string
     return notes
 
 @app.post("/notes")
-def add_note(note: Notes, current_user: str = Depends(get_current_user)):
+def add_note(note: Notes):
     result = notes_collection.insert_one(note.dict())
     return {"id": str(result.inserted_id)}
 
+@app.delete("/notes/{note_id}")
+def delete_note(note_id: str):
+    result = notes_collection.delete_one({"_id": ObjectId(note_id)})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Note not found")
+    return {"message": "Note deleted"}
+
 @app.put("/notes/{note_id}")
-def update_note(note_id: str, updated_note: Notes, current_user: str = Depends(get_current_user)):
+def update_note(note_id: str, updated_note: Notes):
     result = notes_collection.update_one(
         {"_id": ObjectId(note_id)},
         {"$set": {"title": updated_note.title, "content": updated_note.content}}
@@ -103,12 +70,45 @@ def update_note(note_id: str, updated_note: Notes, current_user: str = Depends(g
     else:
         return {"message": "Note not found or no changes made"}
 
-@app.delete("/notes/{note_id}")
-def delete_note(note_id: str, current_user: str = Depends(get_current_user)):
-    result = notes_collection.delete_one({"_id": ObjectId(note_id)})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Note not found")
-    return {"message": "Note deleted"}
+# def get_current_user(request: Request):
+#     token = request.headers.get("Authorization")
+#     if not token or not token.startswith("Bearer "):
+#         raise HTTPException(status_code=401, detail="Unauthorized")
+#     try:
+#         payload = decode_token(token[7:])  # remove "Bearer "
+#         return payload["sub"]  # email
+#     except:
+#         raise HTTPException(status_code=401, detail="Invalid token")
+
+# @app.get("/notes")
+# def get_notes(current_user: str = Depends(get_current_user)):
+#     notes = list(notes_collection.find())
+#     for note in notes:
+#         note["_id"] = str(note["_id"])  # convert ObjectId to string
+#     return notes
+
+# @app.post("/notes")
+# def add_note(note: Notes, current_user: str = Depends(get_current_user)):
+#     result = notes_collection.insert_one(note.dict())
+#     return {"id": str(result.inserted_id)}
+
+# @app.put("/notes/{note_id}")
+# def update_note(note_id: str, updated_note: Notes, current_user: str = Depends(get_current_user)):
+#     result = notes_collection.update_one(
+#         {"_id": ObjectId(note_id)},
+#         {"$set": {"title": updated_note.title, "content": updated_note.content}}
+#     )
+#     if result.modified_count == 1:
+#         return {"message": "Note updated successfully"}
+#     else:
+#         return {"message": "Note not found or no changes made"}
+
+# @app.delete("/notes/{note_id}")
+# def delete_note(note_id: str, current_user: str = Depends(get_current_user)):
+#     result = notes_collection.delete_one({"_id": ObjectId(note_id)})
+#     if result.deleted_count == 0:
+#         raise HTTPException(status_code=404, detail="Note not found")
+#     return {"message": "Note deleted"}
 
 
 # User Routes
